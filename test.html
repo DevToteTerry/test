@@ -105,100 +105,64 @@
         class Card {
             constructor(className) {
                 this.el = document.querySelector(className);
-                this.computedStyle = getComputedStyle(className)
+            }
+            getTop() {
+                this.computedStyle = getComputedStyle(this.el);
+
+                return this.computedStyle.getPropertyValue('top');
+            }
+            getY() {
+                this.rect = this.el.getBoundingClientRect();
+                
+                return this.rect.y
+            }
+            setScale(scale) {
+                this.el.style.setProperty('--scale', scale);
             }
         }
 
-        const interactionSection = document.querySelector('.card-cont');
-        const interactionInner = interactionSection.querySelector('.card-inner')
-        const card1 = document.querySelector(".card-item1");
-        const card2 = document.querySelector(".card-item2");
-        const card3 = document.querySelector(".card-item3");
-        const card4 = document.querySelector(".card-item4");
-
-        const card1Style = getComputedStyle(card1);
-        const card2Style = getComputedStyle(card2);
-        const card3Style = getComputedStyle(card3);
-        const card4Style = getComputedStyle(card4);
-        const targetTop = card1Style.getPropertyValue('top')
-        const targetTop2 = card2Style.getPropertyValue('top')
-        const targetTop3 = card3Style.getPropertyValue('top')
-        const targetTop4 = card4Style.getPropertyValue('top')
+        const card1 = new Card(".card-item1");
+        const card2 = new Card(".card-item2");
+        const card3 = new Card(".card-item3");
+        const card4 = new Card(".card-item4");
 
 
         let prevScroll = window.scrollY;
 
         window.addEventListener('scroll', (e) => {
-            const interactionRect = interactionSection.getBoundingClientRect();
-            const interactionTop = interactionRect.top > 0 ? 0 : interactionRect.top;
-            const interactionTop2 = interactionSection.offsetHeight;
-            const scrollInteractionProgress = (Math.abs(interactionTop) / (interactionTop2 - window.innerHeight)) * 100;
-
-            const card1Rect = card1.getBoundingClientRect();
-            const card2Rect = card2.getBoundingClientRect();
-            const card3Rect = card3.getBoundingClientRect();
-            const card4Rect = card4.getBoundingClientRect();
-            const currentY = card1Rect.y;
-            const currentY2 = card2Rect.y;
-            const currentY3 = card3Rect.y;
-            const currentY4 = card4Rect.y;
             const currentScroll = window.scrollY
-
             const vectorScroll = prevScroll <= currentScroll
+
             prevScroll = currentScroll
 
-            if (targetTop4 === currentY4 + 'px') {
-                card1.style.setProperty('--scale', vectorScroll ? 0.8 : 0.85);
-                card2.style.setProperty('--scale', vectorScroll ? 0.85 : 0.9);
-                card3.style.setProperty('--scale', vectorScroll ? 0.9 : 0.95);
+            if (card4.getTop() === card4.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.8 : 0.85);
+                card2.setScale(vectorScroll ? 0.85 : 0.9);
+                card3.setScale(vectorScroll ? 0.9 : 0.95);
 
                 return
-                
             }
 
-            if (targetTop3 === currentY3 + 'px') {
-                card1.style.setProperty('--scale', vectorScroll ? 0.85 : 0.9);
-                card2.style.setProperty('--scale', vectorScroll ? 0.9 : 0.95);
-                card3.style.setProperty('--scale', vectorScroll ? 0.95 : 1);
+            if (card3.getTop() === card3.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.85 : 0.9);
+                card2.setScale(vectorScroll ? 0.9 : 0.95);
+                card3.setScale(vectorScroll ? 0.95 : 1);
 
                 return
-
             }
 
-            if (targetTop2 === currentY2 + 'px') {
-                card1.style.setProperty('--scale', vectorScroll ? 0.9 : 0.95);
-                card2.style.setProperty('--scale', vectorScroll ? 0.95 : 1);
+            if (card2.getTop() === card2.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.9 : 0.95);
+                card2.setScale(vectorScroll ? 0.95 : 1);
 
                 return
             }
             
-            if (targetTop === currentY + 'px') {
-                card1.style.setProperty('--scale', vectorScroll ? 0.95 : 1);
+            if (card1.getTop() === card1.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.95 : 1);
             }
 
         });
-
-        
-
-
-        function set0to100(num) {
-            return Math.max(0, Math.min(100, num));
-        }
-
-        function calcProgress(progress, start, end) {
-            if(progress < start) {
-                return 0
-            }
-
-            if(progress > end) {
-                return 100
-            }
-
-            const result = ((progress - start) / (end - start)) * 100;
-            
-            return result
-        }
-        
 
     </script>
 </body>
