@@ -19,15 +19,14 @@
         }
 
         .card-cont {
+            --top: 0;
             width: 1440px;
             margin: 0 auto;
-            height: 2800vh;
-            --top: 0;
-            --width: 0;
+            height: 700vh;            
         }
         .card-item {            
             position: sticky;
-            top: 250px;
+            top: 0;
             width: 850px;
             height: 400px;
             margin: 0 auto;
@@ -35,19 +34,24 @@
             margin-bottom: 100px;
         }
         .card-cont .card-item1 {
-            top: calc(var(--top)*2.5px);  
-            width: calc(var(--width)*8);
+            top: calc(1000px - var(--top) * (1000px - 250px) / 100);
             background-color: lightcoral;
         }
         .card-cont .card-item2 {
+            top: calc(1000px - var(--top) * (1000px - 300px) / 100);
             background-color: black;
         }
         .card-cont .card-item3 {
+            top: calc(1000px - var(--top) * (1000px - 350px) / 100);
             background-color: blue;
         }
         .card-cont .card-item4 {
+            top: calc(1000px - var(--top) * (1000px - 400px) / 100);
             background-color: red;
         }
+
+        .box {background-color: aqua;
+        height: 100vh;}
 
     </style>
 </head>
@@ -60,6 +64,15 @@
             <div class="card-item card-item3"></div>
             <div class="card-item card-item4"></div>
         </section>
+        <section>
+            <div class="box"></div>
+        </section>
+        <section>
+            <div class="box"></div>
+        </section>
+        <section>
+            <div class="box"></div>
+        </section>
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
@@ -67,6 +80,9 @@
     <script>
         const interactionSection = document.querySelector('.card-cont');
         const card1 = document.querySelector(".card-item1");
+        const card2 = document.querySelector(".card-item2");
+        const card3 = document.querySelector(".card-item3");
+        const card4 = document.querySelector(".card-item4");
 
         window.addEventListener('scroll', (e) => {
             const interactionRect = interactionSection.getBoundingClientRect();
@@ -75,8 +91,25 @@
             const scrollInteractionProgress = (Math.abs(interactionTop) / (interactionTop2 - window.innerHeight)) * 100;
             
 
-            card1.style.setProperty('--top', calcProgress(scrollInteractionProgress, 0, 20));
-            card1.style.setProperty('--width', calcProgress(scrollInteractionProgress, 0, 20));
+            card1.style.setProperty('--top', calcProgress(scrollInteractionProgress, 0, 10));            
+            card2.style.setProperty('--top', calcProgress(scrollInteractionProgress, 10, 20));
+            card3.style.setProperty('--top', calcProgress(scrollInteractionProgress, 20, 30));
+            card4.style.setProperty('--top', calcProgress(scrollInteractionProgress, 30, 40));
+
+            if (scrollInteractionProgress >= 41) {
+
+                
+                // card1.style.position = '??';
+                // card2.style.position = '??';
+                // card3.style.position = '??';
+                // card4.style.position = '??';
+            } else {
+                card1.style.position = 'sticky';
+                card2.style.position = 'sticky';
+                card3.style.position = 'sticky';
+                card4.style.position = 'sticky';
+            }
+
         });
 
         
