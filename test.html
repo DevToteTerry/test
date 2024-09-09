@@ -19,120 +19,137 @@
         }
 
         .card-cont {
-            --top: 0;
-            width: 1440px;
-            margin: 0 auto;
-            height: 700vh;            
-        }
-        .card-item {            
+            margin-top: 50vh;
             position: sticky;
             top: 0;
+            width: 1440px;
+            margin: 0 auto;            
+            background-color: yellow;
+            padding: 50px;
+            --top: 0;
+            --width: 0;
+        }
+        .card-wrapper {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+        }
+        .card-item {            
+            position: relative;
             width: 850px;
             height: 400px;
             margin: 0 auto;
             border-radius: 25px;
-            margin-bottom: 100px;
+            --scale: 1;
+            transform: scale(var(--scale));
+            transition: transform 0.4s linear;
+            transform-origin: top;
+
         }
-        .card-cont .card-item1 {
-            top: calc(1000px - var(--top) * (1000px - 250px) / 100);
+        .card-cont .card-item1 {            
+            top : calc(25vh + 25px);
             background-color: lightcoral;
         }
         .card-cont .card-item2 {
-            top: calc(1000px - var(--top) * (1000px - 300px) / 100);
+            top : calc(25vh + 50px);
+
             background-color: black;
         }
         .card-cont .card-item3 {
-            top: calc(1000px - var(--top) * (1000px - 350px) / 100);
+            top : calc(25vh + 75px);
+            
             background-color: blue;
         }
         .card-cont .card-item4 {
-            top: calc(1000px - var(--top) * (1000px - 400px) / 100);
+            top : calc(25vh + 100px);
             background-color: red;
         }
 
-        .box {background-color: aqua;
-        height: 100vh;}
-
+        .dummy {
+            height: 1000px;
+        }
     </style>
 </head>
 <body>    
 
     <main>
-        <section class="card-cont">
-            <div class="card-item card-item1"></div>
-            <div class="card-item card-item2"></div>
-            <div class="card-item card-item3"></div>
-            <div class="card-item card-item4"></div>
-        </section>
-        <section>
-            <div class="box"></div>
-        </section>
-        <section>
-            <div class="box"></div>
-        </section>
-        <section>
-            <div class="box"></div>
-        </section>
+        <section class="dummy"></section>
+        <div>
+            <section class="card-cont">
+                <div class="card-wrapper"><div class="card-item card-item1"></div></div>
+                <div class="card-wrapper"><div class="card-item card-item2"></div></div>
+                <div class="card-wrapper"><div class="card-item card-item3"></div></div>
+                <div class="card-wrapper"><div class="card-item card-item4"></div></div>
+            </section>
+        </div>
+        <section class="dummy"></section>
+
     </main>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.5/ScrollTrigger.min.js"></script>
     <script>
-        const interactionSection = document.querySelector('.card-cont');
-        const card1 = document.querySelector(".card-item1");
-        const card2 = document.querySelector(".card-item2");
-        const card3 = document.querySelector(".card-item3");
-        const card4 = document.querySelector(".card-item4");
+        class Card {
+            constructor(className) {
+                this.el = document.querySelector(className);
+            }
+            getTop() {
+                this.computedStyle = getComputedStyle(this.el);
+
+                return this.computedStyle.getPropertyValue('top');
+            }
+            getY() {
+                this.rect = this.el.getBoundingClientRect();
+                
+                return this.rect.y
+            }
+            setScale(scale) {
+                this.el.style.setProperty('--scale', scale);
+            }
+        }
+
+        const card1 = new Card(".card-item1");
+        const card2 = new Card(".card-item2");
+        const card3 = new Card(".card-item3");
+        const card4 = new Card(".card-item4");
+
+
+        let prevScroll = window.scrollY;
 
         window.addEventListener('scroll', (e) => {
-            const interactionRect = interactionSection.getBoundingClientRect();
-            const interactionTop = interactionRect.top > 0 ? 0 : interactionRect.top;
-            const interactionTop2 = interactionSection.offsetHeight;
-            const scrollInteractionProgress = (Math.abs(interactionTop) / (interactionTop2 - window.innerHeight)) * 100;
+            const currentScroll = window.scrollY
+            const vectorScroll = prevScroll <= currentScroll
+
+            prevScroll = currentScroll
+
+            if (card4.getTop() === card4.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.8 : 0.85);
+                card2.setScale(vectorScroll ? 0.85 : 0.9);
+                card3.setScale(vectorScroll ? 0.9 : 0.95);
+
+                return
+            }
+
+            if (card3.getTop() === card3.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.85 : 0.9);
+                card2.setScale(vectorScroll ? 0.9 : 0.95);
+                card3.setScale(vectorScroll ? 0.95 : 1);
+
+                return
+            }
+
+            if (card2.getTop() === card2.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.9 : 0.95);
+                card2.setScale(vectorScroll ? 0.95 : 1);
+
+                return
+            }
             
-
-            card1.style.setProperty('--top', calcProgress(scrollInteractionProgress, 0, 10));            
-            card2.style.setProperty('--top', calcProgress(scrollInteractionProgress, 10, 20));
-            card3.style.setProperty('--top', calcProgress(scrollInteractionProgress, 20, 30));
-            card4.style.setProperty('--top', calcProgress(scrollInteractionProgress, 30, 40));
-
-            if (scrollInteractionProgress >= 41) {
-
-                
-                // card1.style.position = '??';
-                // card2.style.position = '??';
-                // card3.style.position = '??';
-                // card4.style.position = '??';
-            } else {
-                card1.style.position = 'sticky';
-                card2.style.position = 'sticky';
-                card3.style.position = 'sticky';
-                card4.style.position = 'sticky';
+            if (card1.getTop() === card1.getY() + 'px') {
+                card1.setScale(vectorScroll ? 0.95 : 1);
             }
 
         });
-
-        
-
-
-        function set0to100(num) {
-            return Math.max(0, Math.min(100, num));
-        }
-
-        function calcProgress(progress, start, end) {
-            if(progress < start) {
-                return 0
-            }
-
-            if(progress > end) {
-                return 100
-            }
-
-            const result = ((progress - start) / (end - start)) * 100;
-            
-            return result
-        }
-        
 
     </script>
 </body>
